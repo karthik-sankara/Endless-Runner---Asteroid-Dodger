@@ -6,8 +6,8 @@ class Play extends Phaser.Scene {
     preload() {
         this.load.image('background', './assets/BigStars.png')
         this.load.spritesheet('spaceship', './assets/spritesheet.png', {
-            frameWidth: 48,
-            frameHeight: 48
+            frameWidth: 45,
+            frameHeight: 45
         })
     }
 
@@ -18,7 +18,7 @@ class Play extends Phaser.Scene {
         keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
         keyR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
 
-        this.player = this.physics.add.sprite(0, 750, 'spaceship', 1).setScale(2)
+        this.player = this.physics.add.sprite(0, 650, 'spaceship', 0).setScale(2)
         this.player.body.setCollideWorldBounds(true)
 
         this.player.body.setSize(32, 32).setOffset(8, 16)
@@ -27,7 +27,17 @@ class Play extends Phaser.Scene {
         cursors = this.input.keyboard.createCursorKeys()
 
         this.anims.create({
-            key: 'up', 
+            key: 'idle-up', 
+            frameRate: 0,
+            repeat: -1,
+            frames: this.anims.generateFrameNumbers('spaceship', {
+                start: 0,
+                end: 0
+            })
+        })
+
+        this.anims.create({                     //created these animations so i wouldn't have missing animation error in the chrome console
+            key: 'fly-up', 
             frameRate: 0,
             repeat: -1,
             frames: this.anims.generateFrameNumbers('spaceship', {
@@ -37,7 +47,18 @@ class Play extends Phaser.Scene {
         })
 
         this.anims.create({
-            key: 'left', 
+            key: 'fly-down', 
+            frameRate: 0,
+            repeat: -1,
+            frames: this.anims.generateFrameNumbers('spaceship', {
+                start: 0,
+                end: 0
+            })
+        })
+
+
+        this.anims.create({
+            key: 'fly-left', 
             frameRate: 5,
             repeat: -1,
             frames: this.anims.generateFrameNumbers('spaceship', {
@@ -47,7 +68,7 @@ class Play extends Phaser.Scene {
         })
 
         this.anims.create({
-            key: 'right', 
+            key: 'fly-right', 
             frameRate: 5,
             repeat: -1,
             frames: this.anims.generateFrameNumbers('spaceship', {
@@ -55,7 +76,7 @@ class Play extends Phaser.Scene {
                 end: 1
             })
         })
-        
+
 
 
 
@@ -65,28 +86,35 @@ class Play extends Phaser.Scene {
         this.starfield.tilePositionY -= 4
 
         let playerVector = new Phaser.Math.Vector2(0, 0)
-        let playerDirection = 'down';
+        let playerDirection = 'up';
 
 
 
         if(cursors.left.isDown) {
             playerVector.x = -1
             playerDirection = 'left';
+            //playerRotation = -10;
         }
-        else if(cursors.right.isDown) {
+        
+        if(cursors.right.isDown) {
             playerVector.x = 1
             playerDirection = 'right';
+            //playerRotation = 10;
         }
 
 
         if(cursors.up.isDown) {
             playerVector.y = -1
             playerDirection = 'up';
+
         }
-        else if(cursors.down.isDown) {
+
+        if(cursors.down.isDown) {
             playerVector.y = 1
             playerDirection = 'down';
         }
+
+
 
 
         playerVector.normalize()
@@ -95,7 +123,7 @@ class Play extends Phaser.Scene {
         this.player.setVelocity(this.PLAYER_VELOCITY * playerVector.x, this.PLAYER_VELOCITY * playerVector.y)
 
         let playerMovement
-        playerVector.length() ? playerMovement = 'walk' : playerMovement = 'idle'
+        playerVector.length() ? playerMovement = 'fly' : playerMovement = 'idle'
         this.player.play(playerMovement + '-' + playerDirection, true)
 
     }
