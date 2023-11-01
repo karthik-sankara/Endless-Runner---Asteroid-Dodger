@@ -3,13 +3,17 @@ class Play extends Phaser.Scene {
         super("playScene");
     }
 
+
     preload() {
         this.load.image('background', './assets/BigStars.png')
         this.load.spritesheet('spaceship', './assets/spritesheet.png', {
             frameWidth: 45,
             frameHeight: 45
         })
+        this.load.image('asteroid','./assets/pixil-frame-0.png')
+
     }
+
 
     create() {
         this.starfield = this.add.tileSprite(0, 0, 800, 800, 'background').setOrigin(0,0);
@@ -36,7 +40,7 @@ class Play extends Phaser.Scene {
             })
         })
 
-        this.anims.create({                     //created these animations so i wouldn't have missing animation error in the chrome console
+        this.anims.create({                     //created these extra animations so i wouldn't have missing animation error in the chrome console
             key: 'fly-up', 
             frameRate: 0,
             repeat: -1,
@@ -78,7 +82,30 @@ class Play extends Phaser.Scene {
         })
 
 
+        //Inspiration from https://newdocs.phaser.io/docs/3.55.2/Phaser.Time.TimerEvent 
+        //On how this is used to keep repeating functions, using the callBack feature
+        //I just created a function that creates and initializes asteroid object and adds it to a group (collection of asteroids which are dependant on physics)
 
+        this.asteroids = this.physics.add.group()
+
+
+        function initAsteroid() {
+            const asteroid = this.physics.add.sprite(Phaser.Math.Between(0, this.game.config.width), 0, 'asteroid')
+            asteroid.body.setCircle(38.5);
+            this.asteroids.add(asteroid)
+            asteroid.setVelocityY(400)
+            this.physics.add.collider(this.player, this.asteroids)
+        }
+
+        //use the time.addEvent's useful call back feature to call that initialize a certain number of asteroids in a given period (1 second)
+
+        this.time.addEvent({
+            delay: 500, // Spawn a new asteroid every 1000 milliseconds (1 second)
+            callback: initAsteroid,
+            callbackScope: this,
+            loop: true // For the endless runner theme !
+        });
+        //////////////////////////////////////////////////////////////////////////////////////////////////////
 
     }
 
@@ -127,8 +154,5 @@ class Play extends Phaser.Scene {
         this.player.play(playerMovement + '-' + playerDirection, true)
 
     }
-
-
-
 
 }
