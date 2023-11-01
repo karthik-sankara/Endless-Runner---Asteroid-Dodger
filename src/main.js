@@ -12,7 +12,7 @@ let config = {
     physics: {
         default: 'arcade',
         arcade: {
-            debug: false,
+            debug: true,
             gravity: {
                 x: 0,
                 y: 0
@@ -36,5 +36,5 @@ let cursors
 let { height, width } = game.config
 
 
-
+let elapsed_time
 

@@ -32,6 +32,10 @@ class Menu extends Phaser.Scene {
         menuConfig.color = '#000';
         this.add.text(game.config.width/2, game.config.height/2 + borderUISize + borderPadding, 'Press ^ to begin!', menuConfig).setOrigin(0.5);
 
+        
+
+
+
 
 
 
