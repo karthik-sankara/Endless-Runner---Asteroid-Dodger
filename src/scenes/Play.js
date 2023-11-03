@@ -170,6 +170,8 @@ class Play extends Phaser.Scene {
 
     update() {
 
+        let score = this.p1Score
+
         this.starfield.tilePositionY -= 4
 
         let playerVector = new Phaser.Math.Vector2(0, 0)
@@ -243,6 +245,7 @@ class Play extends Phaser.Scene {
             this.player.destroy()
             boom.anims.play('explode')
             this.add.text(game.config.width/2, 30, 'GAME OVER', this.menuConfig).setOrigin(0.5);
+            this.add.text(350, 10, 'Score: ' + score, this.menuConfig)
             this.add.text(game.config.width/2, 60, 'Press (R) to Restart or (M) for Menu', this.menuConfig).setOrigin(0.5);
         }
         else {
