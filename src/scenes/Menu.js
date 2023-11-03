@@ -6,6 +6,7 @@ class Menu extends Phaser.Scene {
     preload() {
         //preload audio from assets
         this.load.audio('transition', './assets/menuselect4-36147.mp3')
+        
     }
 
     create() {
@@ -25,11 +26,11 @@ class Menu extends Phaser.Scene {
 
 
         this.add.text(400, 100, 'Attack of the Asteroids', menuConfig).setOrigin(0.5);
-        this.add.text(400, 250, 'Use <-^-> arrow keys to move up, down, l, and r to dodge the asteroids', menuConfig).setOrigin(0.5);
+        this.add.text(400, 250, 'Use ↕️↔️ arrow keys to move up, down, l, and r to dodge the asteroids', menuConfig).setOrigin(0.5);
         this.add.text(400, 300, 'Edge collisions can redirect Asteroids!', menuConfig).setOrigin(0.5);
         menuConfig.backgroundColor = '#00FF00';
         menuConfig.color = '#000';
-        this.add.text(400, 400, 'Press ^ to begin!', menuConfig).setOrigin(0.5);
+        this.add.text(400, 400, 'Press ⬆️ to begin!', menuConfig).setOrigin(0.5);
 
         menuConfig.backgroundColor = 'Orange';
         menuConfig.color = 'black';

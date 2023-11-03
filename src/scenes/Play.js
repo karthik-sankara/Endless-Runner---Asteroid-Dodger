@@ -20,12 +20,14 @@ class Play extends Phaser.Scene {
         this.load.spritesheet('explosion', './assets/explosion.png', {frameWidth: 300, frameHeight: 300, startFrame: 0, endFrame: 0})
         this.load.audio('background_music', './assets/background_music.mp3')
         this.load.audio('explosion','./assets/explosion-129711.mp3')
+        this.load.audio('transition_2','./assets/transition_2.mp3')
     }
 
 
     create() {
 
         this.destroyed_rocket = false
+        this.destroyed_text = false
 
         this.starfield = this.add.tileSprite(0, 0, 800, 800, 'background').setOrigin(0,0);
 
@@ -140,7 +142,7 @@ class Play extends Phaser.Scene {
                 top: 5,
                 bottom: 5,
             },
-            fixedWidth: 100
+            fixedWidth: 300
         }
 
         this.menuConfig = {
@@ -158,7 +160,7 @@ class Play extends Phaser.Scene {
 
         
 
-        this.scoreBottom = this.add.text(30,650, this.p1Score, this.scoreConfig)
+        this.text_score = this.scoreBottom = this.add.text(30,650, this.p1Score, this.scoreConfig)
 
         this.background_music = this.sound.add('background_music', {loop: true})
 
@@ -238,26 +240,28 @@ class Play extends Phaser.Scene {
         }
 
 
-        if((this.physics.overlap(this.player, this.asteroids)) && !this.destroyed_rocket) {
+        if((this.physics.overlap(this.player, this.asteroids)) && !this.destroyed_rocket && !this.destroyed_text) {
             this.destroyed_rocket = true
+            this.destroyed_text = true
             let boom = this.add.sprite(this.player.x, this.player.y, 'explosion')
             this.explosion_music.play()
             this.player.destroy()
             boom.anims.play('explode')
-            this.add.text(game.config.width/2, 30, 'GAME OVER', this.menuConfig).setOrigin(0.5);
-            this.add.text(350, 10, 'Score: ' + score, this.menuConfig)
-            this.add.text(game.config.width/2, 60, 'Press (R) to Restart or (M) for Menu', this.menuConfig).setOrigin(0.5);
+            this.add.text(game.config.width/2, 400, 'GAME OVER', this.menuConfig).setOrigin(0.5);
+            this.add.text(340, 381, 'Score: ' + score, this.scoreConfig)
+            this.add.text(game.config.width/2, 450, 'Press (R) to Restart or (M) for Menu', this.menuConfig).setOrigin(0.5);
+            this.text_score.destroy()
         }
         else {
             elapsed_time += 1;
-            if(elapsed_time % 100 == 0) {
+            if(elapsed_time % 100 == 0 && !this.destroyed_text) {
                 this.p1Score += 5
                 this.scoreBottom.text = this.p1Score; 
             }
             if(elapsed_time % 500 == 0) {
                 this.time.addEvent.delay -= 100
                 this.velocityY += 70
-                this.velocityX += 10
+                this.velocityX += 5
 
             }
         }
@@ -265,6 +269,7 @@ class Play extends Phaser.Scene {
         if(this.destroyed_rocket) {
             if(Phaser.Input.Keyboard.JustDown(keyR)) {
                 this.background_music.stop()
+                this.sound.play('transition_2', {volume: 5});  
                 this.velocityY = 400
                 this.velocityX = 100
                 this.time_diff = 500
@@ -272,6 +277,7 @@ class Play extends Phaser.Scene {
             }
             if(Phaser.Input.Keyboard.JustDown(keyM)) {
                 this.background_music.stop()
+                this.sound.play('transition_2', {volume: 5});  
                 this.velocityY = 400
                 this.velocityX = 100
                 this.time_diff = 500
